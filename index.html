@@ -1,88 +1,17 @@
-<!--
-GitHub Videos Viewer
-Single-file static site (index.html) to display videos hosted in the same GitHub repo or on GitHub Pages.
-
-How to use:
-1. Put this file at the root of your repo (or in the branch/prefix you will publish with GitHub Pages).
-2. Add a folder called `videos/` and optionally `thumbs/` to the repo with your .mp4 (or web-friendly) files and thumbnails.
-3. Create a `videos.json` manifest (example below) and put it in the repo root or adjust `MANIFEST_URL` in the script.
-4. Enable GitHub Pages for the repo (Settings -> Pages -> branch) and the site will serve relative video URLs.
-
-Example videos.json:
-[
-  {
-    "file": "videos/video1.mp4",
-    "title": "My Video 1",
-    "description": "Short description",
-    "thumb": "thumbs/video1.jpg"
-  },
-  {
-    "file": "videos/video2.mp4",
-    "title": "Another Video",
-    "description": "...",
-    "thumb": "thumbs/video2.jpg"
-  }
-]
-
-Notes & recommendations:
-- Prefer MP4 (H.264) for broad compatibility. Use .webm (VP9) as fallback if you need smaller sizes.
-- GitHub has storage limits and is not optimized for heavy video streaming. If you expect many viewers/large files, consider a CDN or video host (Cloudflare Pages + R2, S3 + CloudFront, YouTube unlisted, etc.).
-- GitHub Pages supports range requests and video playback for files in the published site, but raw.githubusercontent URLs may not behave the same.
-- If you store video files in Releases or as large files, link to those URLs in the manifest.
-
-Features included in this file:
-- Loads a manifest JSON (videos.json)
-- Displays responsive grid with thumbnails, title, search, and sort
-- Plays video in a modal with native controls and keyboard shortcuts
-- Lazy loads thumbnails
-- Small, dependency-free JavaScript
-
-Customization pointers:
-- Change MANIFEST_URL to './videos.json' or '/yourpath/videos.json'
-- Add more metadata to the manifest (duration, tags) and adapt the UI
-- Swap CSS to Tailwind or add a framework if you prefer
-
--->
-
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>GitHub Videos Viewer</title>
-  <style>
-    :root{--bg:#0f1720;--card:#0b1220;--muted:#9aa4b2;--accent:#3b82f6}
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,#071023 0%, #071426 100%);color:#e6eef6;font-family:Inter,ui-sans-serif,system-ui,Arial,sans-serif}
-    .wrap{max-width:1100px;margin:28px auto;padding:20px}
-    header{display:flex;gap:16px;align-items:center;justify-content:space-between}
-    h1{margin:0;font-size:20px}
-    .controls{display:flex;gap:8px;align-items:center}
-    input[type=search]{padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:inherit}
-    select{padding:8px;border-radius:10px;background:transparent;color:inherit;border:1px solid rgba(255,255,255,0.06)}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-top:18px}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:12px;padding:10px;box-shadow:0 6px 20px rgba(2,6,23,0.6);cursor:pointer;transition:transform .14s}
-    .card:hover{transform:translateY(-6px)}
-    .thumb{width:100%;height:130px;border-radius:8px;object-fit:cover;background:#081223}
-    .meta{padding-top:8px}
-    .title{font-weight:600;font-size:14px;margin:0 0 6px 0}
-    .desc{font-size:12px;color:var(--muted);margin:0}
-    .empty{padding:40px;border-radius:10px;text-align:center;color:var(--muted);background:rgba(255,255,255,0.01)}
-    /* modal */
-    .modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(rgba(2,6,23,0.7),rgba(2,6,23,0.86));z-index:60;padding:18px;backdrop-filter:blur(6px)}
-    .player{width:min(1100px,96%);max-height:90%;background:var(--card);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
-    .player video{width:100%;height:auto;border-radius:8px;background:black}
-    .player .row{display:flex;align-items:center;justify-content:space-between;gap:8px}
-    .close{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:6px 10px;border-radius:8px;cursor:pointer}
-    footer{margin-top:20px;text-align:center;color:var(--muted);font-size:13px}
-    @media (max-width:600px){.thumb{height:110px}}
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="wrap">
     <header>
       <div>
         <h1>GitHub Videos Viewer</h1>
-        <div style="font-size:13px;color:var(--muted)">Static site to list & play videos hosted in this repo</div>
+        <div class="subtitle">Static site to list & play videos hosted in this repo</div>
       </div>
       <div class="controls">
         <input id="search" type="search" placeholder="Search title or description" />
@@ -95,7 +24,9 @@ Customization pointers:
 
     <main id="main">
       <div id="grid" class="grid"></div>
-      <div id="empty" class="empty" style="display:none">No videos found. Add a <code>videos.json</code> manifest and place files in <code>videos/</code>.</div>
+      <div id="empty" class="empty" style="display:none">
+        No videos found. Add a <code>videos.json</code> manifest and place files in <code>videos/</code>.
+      </div>
     </main>
 
     <footer>
@@ -127,97 +58,6 @@ Customization pointers:
     </div>
   </div>
 
-  <script>
-    // CONFIG: change to your manifest path if needed
-    const MANIFEST_URL = './videos.json?t=' + new Date().getTime();
-
-    const grid = document.getElementById('grid');
-    const empty = document.getElementById('empty');
-    const tpl = document.getElementById('cardTpl');
-    const searchInput = document.getElementById('search');
-    const sortSelect = document.getElementById('sort');
-
-    const modal = document.getElementById('modal');
-    const closeBtn = document.getElementById('closeBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const videoPlayer = document.getElementById('videoPlayer');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalDesc = document.getElementById('modalDesc');
-
-    let videos = [];
-
-    async function loadManifest(){
-      try{
-        const res = await fetch(MANIFEST_URL, {cache: 'no-cache'});
-        if(!res.ok) throw new Error('Manifest not found');
-        videos = await res.json();
-        renderGrid();
-      }catch(e){
-        console.warn('Could not load manifest:', e);
-        grid.innerHTML = '';
-        empty.style.display = 'block';
-      }
-    }
-
-    function renderGrid(){
-      const q = searchInput.value.trim().toLowerCase();
-      let list = videos.slice();
-      if(sortSelect.value === 'title') list.sort((a,b)=> (a.title||'').localeCompare(b.title||''));
-      // 'new' leaves manifest order
-      if(q) list = list.filter(v => ((v.title||'')+ ' ' + (v.description||'')).toLowerCase().includes(q));
-
-      grid.innerHTML = '';
-      if(list.length === 0){ empty.style.display = 'block'; return } else empty.style.display = 'none';
-
-      for(const v of list){
-        const node = tpl.content.cloneNode(true);
-        const card = node.querySelector('.card');
-        const img = node.querySelector('.thumb');
-        const title = node.querySelector('.title');
-        const desc = node.querySelector('.desc');
-
-        card.dataset.file = v.file;
-        img.src = v.thumb || v.poster || 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="%23081223"/><text x="50%" y="50%" fill="%239aa4b2" font-size="24" text-anchor="middle" dominant-baseline="central">No+thumb</text></svg>';
-        img.alt = v.title || 'video thumb';
-        title.textContent = v.title || v.file;
-        desc.textContent = v.description || '';
-
-        card.addEventListener('click', ()=> openPlayer(v));
-        grid.appendChild(node);
-      }
-    }
-
-    function openPlayer(v){
-      modal.style.display = 'flex';
-      modal.setAttribute('aria-hidden','false');
-      videoPlayer.src = v.file;
-      videoPlayer.poster = v.thumb || '';
-      modalTitle.textContent = v.title || v.file;
-      modalDesc.textContent = v.description || '';
-      downloadBtn.onclick = ()=>{ window.open(v.file, '_blank'); };
-      videoPlayer.play().catch(()=>{});
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closePlayer(){
-      modal.style.display = 'none';
-      modal.setAttribute('aria-hidden','true');
-      videoPlayer.pause();
-      try{ videoPlayer.removeAttribute('src'); videoPlayer.load(); }catch(e){}
-      document.body.style.overflow = '';
-    }
-
-    closeBtn.addEventListener('click', closePlayer);
-    modal.addEventListener('click', (e)=>{ if(e.target===modal) closePlayer(); });
-    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closePlayer(); });
-
-    searchInput.addEventListener('input', debounce(renderGrid, 180));
-    sortSelect.addEventListener('change', renderGrid);
-
-    function debounce(fn, wait){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), wait); }}
-
-    // initial load
-    loadManifest();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
