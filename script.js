@@ -34,18 +34,14 @@ async function loadManifest() {
 function renderGrid() {
   const q = searchInput.value.trim().toLowerCase();
   let list = videos.slice();
-  if (sortSelect.value === 'title') {
-    list.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
-  }
-  if (q) {
-    list = list.filter(v => ((v.title || '') + ' ' + (v.description || '')).toLowerCase().includes(q));
-  }
+  if (sortSelect.value === 'title') list.sort((a,b)=> (a.title||'').localeCompare(b.title||''));
+  if (q) list = list.filter(v => ((v.title||'') + ' ' + (v.description||'')).toLowerCase().includes(q));
 
   grid.innerHTML = '';
   empty.style.display = list.length === 0 ? 'block' : 'none';
-  if (list.length === 0) return;
+  if(list.length === 0) return;
 
-  for (const v of list) {
+  for(const v of list) {
     const node = tpl.content.cloneNode(true);
     const card = node.querySelector('.card');
     const img = node.querySelector('.thumb');
@@ -57,20 +53,15 @@ function renderGrid() {
     title.textContent = v.title || v.file;
     desc.textContent = v.description || '';
 
-    // Use existing thumb or placeholder
-    if (v.thumb && v.thumb !== 'none') {
-      img.src = v.thumb;
-    } else {
-      img.src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="%23081223"/><text x="50%" y="50%" fill="%239aa4b2" font-size="24" text-anchor="middle" dominant-baseline="central">No+thumb</text></svg>';
-    }
+    img.src = v.thumb && v.thumb !== 'none'
+      ? v.thumb
+      : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="%23081223"/><text x="50%" y="50%" fill="%239aa4b2" font-size="24" text-anchor="middle" dominant-baseline="central">No+thumb</text></svg>';
 
-    // Card click opens player
     card.addEventListener('click', () => openPlayer(v));
 
-    // Append card first
     grid.appendChild(node);
 
-    // Generate in-browser placeholder if missing
+    // This must be inside the loop!
     if (!v.thumb || v.thumb === 'none') {
       generateCardThumbnail(card, v);
     }
