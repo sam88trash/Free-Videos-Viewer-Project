@@ -14,7 +14,6 @@
   {
     "file": "videos/video3.mp4",
     "title": "No Thumbnail Example",
-    "description": "This video doesn't have a thumbnail and will use the default placeholder.",
-    "thumb":"none"
+    "description": "This video doesn't have a thumbnail and will use the default placeholder."
   }
 ]
