@@ -192,7 +192,7 @@ footer {
 }
 
 /* Make empty message clearly visible */
-.empty { display: block ; z-index:2 ; position: relative ; }
+/*.empty { display: block ; z-index:2 ; position: relative ; }*/
 
 /* Ensure header/footer stacking doesn't cover grid */
 header, footer { z-index: 3; position: relative; }
