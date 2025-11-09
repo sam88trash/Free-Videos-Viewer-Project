@@ -182,17 +182,17 @@ footer {
 
 
 /* Force modal to stay hidden when aria-hidden is true */
-#modal[aria-hidden="true"] { display: none !important; pointer-events: none !important; }
+#modal[aria-hidden="true"] { display: none ; pointer-events: none ; }
 
 /* Make sure grid is visible and above any accidental overlay */
 #grid {
-  display: grid !important;
-  z-index: 2 !important;
-  position: relative !important;
+  display: grid ;
+  z-index: 2 ;
+  position: relative ;
 }
 
 /* Make empty message clearly visible */
-.empty { display: block !important; z-index:2 !important; position: relative !important; }
+.empty { display: block ; z-index:2 ; position: relative ; }
 
 /* Ensure header/footer stacking doesn't cover grid */
 header, footer { z-index: 3; position: relative; }
