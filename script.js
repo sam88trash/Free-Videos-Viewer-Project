@@ -111,12 +111,15 @@ function openPlayer(v) {
 
 
 function closePlayer() {
+  const modal = document.getElementById('modal');
+  const video = document.getElementById('videoPlayer');
   modal.style.display = 'none';
-  modal.setAttribute('aria-hidden', 'true');
-  videoPlayer.pause();
-  try { videoPlayer.removeAttribute('src'); videoPlayer.load(); } catch (e) {}
-  document.body.style.overflow = '';
+  video.pause();
+  video.removeAttribute('src');
+  video.load();
+  document.body.style.overflow = 'auto';
 }
+
 
 // Event listeners
 closeBtn.addEventListener('click', closePlayer);
