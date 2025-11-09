@@ -46,7 +46,7 @@ function renderGrid() {
   }
 
   grid.innerHTML = '';
-  empty.style.display = list.length === 0 ? 'none' : 'block';
+  empty.style.display = list.length === 0 ? 'block' : 'none';
   if (list.length === 0) return;
 
   for (const v of list) {
