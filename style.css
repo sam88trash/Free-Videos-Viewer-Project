@@ -83,12 +83,22 @@ select {
   transform: translateY(-6px);
 }
 
-.thumb, .preview {
+.media {
+  position: relative;
   width: 100%;
   height: 130px;
   border-radius: 8px;
+  overflow: hidden;
+}
+
+.thumb, .preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  transition: opacity 0.3s ease;
+  border-radius: 8px;
 }
 
 .thumb{
@@ -96,9 +106,6 @@ select {
 }
 
 .preview {
-  position: absolute;
-  top: 0;
-  left: 0;
   display: none;
 }
 
