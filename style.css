@@ -1,15 +1,17 @@
+/* Color Palette : #EE05F2 #BC04BF #7C038C #380140 #220126 */
+
 :root {
-  --bg: #0f1720;
+  --bg: #380140;
   --card: #0b1220;
-  --muted: #9aa4b2;
+  --muted: #BC04BF;
   --accent: #3b82f6;
 }
 
 html, body {
   height: 100%;
   margin: 0;
-  background: linear-gradient(180deg, #071023 0%, #071426 100%);
-  color: #e6eef6;
+  background: linear-gradient(180deg, #220126 0%, #380140 100%);
+  color: #ffffff;
   font-family: Inter, ui-sans-serif, system-ui, Arial, sans-serif;
 }
 
@@ -66,7 +68,7 @@ select {
 }
 
 .card {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  background: #BC04BF;
   border-radius: 12px;
   padding: 10px;
   box-shadow: 0 6px 20px rgba(2, 6, 23, 0.6);
@@ -83,7 +85,7 @@ select {
   height: 130px;
   border-radius: 8px;
   object-fit: cover;
-  background: #081223;
+  background: #220126;
 }
 
 .meta {
@@ -118,7 +120,7 @@ select {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 1);
+  background: #220126;
   z-index: 1000;
   padding: 0;
   margin: 0;
@@ -153,7 +155,7 @@ select {
 
 .close {
   background: rgba(255, 255, 255, 0.15);
-  color: #e6eef6;
+  color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.25);
   padding: 6px 12px;
   border-radius: 8px;
