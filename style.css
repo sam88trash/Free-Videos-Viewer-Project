@@ -69,24 +69,48 @@ select {
 }
 
 .card {
+  display: flex;
+  flex-direction: column;
   background: var(--card);
   border-radius: 12px;
   padding: 10px;
   box-shadow: 0 6px 20px rgba(0,0,0, 0.7);
   cursor: pointer;
   transition: transform 0.14s;
+  position: relative;
+  overflow: hidden;
 }
 
 .card:hover {
   transform: translateY(-6px);
 }
 
-.thumb {
+.media {
+  position: relative;
   width: 100%;
   height: 130px;
   border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0; /* ensures it stays at the top */
+  margin-bottom: 8px;
+}
+
+.thumb, .preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  border-radius: 8px;
+}
+
+.thumb{
   background: var(--bg);
+}
+
+.preview {
+  display: none;
 }
 
 .meta {

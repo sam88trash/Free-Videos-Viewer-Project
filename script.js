@@ -16,6 +16,7 @@ const modalDesc = document.getElementById('modalDesc');
 
 let videos = [];
 
+
 // Load JSON manifest
 async function loadManifest() {
   try {
@@ -29,6 +30,7 @@ async function loadManifest() {
     empty.style.display = 'block';
   }
 }
+
 
 // Render video cards
 function renderGrid() {
@@ -54,6 +56,7 @@ function renderGrid() {
     const node = tpl.content.cloneNode(true);
     const card = node.querySelector('.card');
     const img = node.querySelector('.thumb');
+    const meta = node.querySelector('.meta');
     const title = node.querySelector('.title');
     const desc = node.querySelector('.desc');
 
@@ -67,12 +70,42 @@ function renderGrid() {
       ? v.thumb
       : 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="%23081223"/><text x="50%" y="50%" fill="%239aa4b2" font-size="24" text-anchor="middle" dominant-baseline="central">No+thumb</text></svg>';
 
+    const media = document.createElement('div');
+    media.className = 'media';
+    
+    const video = document.createElement('video');
+    video.className = 'preview';
+    video.src = v.preview || v.file; // use dedicated preview if available, else main video
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.preload = 'metadata';
+    video.style.display = 'none';
+    
+    media.appendChild(img);
+    media.appendChild(video);
+    // 🧠 Insert media *before* the meta text block
+    card.insertBefore(media, meta);
+
     // Card click opens video player
     card.addEventListener('click', () => openPlayer(v));
+    card.addEventListener('mouseenter', () => {
+      video.currentTime = 0;
+      img.style.display = 'none';
+      video.style.display = 'block';
+      video.play().catch(() => {});
+    });
+    
+    card.addEventListener('mouseleave', () => {
+      video.pause();
+      video.style.display = 'none';
+      img.style.display = 'block';
+    });
 
     grid.appendChild(node);
   }
 }
+
 
 // Fullscreen video player
 function openPlayer(v) {
@@ -127,11 +160,13 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePlaye
 searchInput.addEventListener('input', debounce(renderGrid, 180));
 sortSelect.addEventListener('change', renderGrid);
 
+
 // Debounce helper
 function debounce(fn, wait) {
   let t;
   return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), wait); };
 }
+
 
 // Initialize
 loadManifest();
