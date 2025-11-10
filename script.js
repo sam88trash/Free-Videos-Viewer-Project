@@ -81,11 +81,10 @@ function renderGrid() {
     video.preload = 'metadata';
     video.style.display = 'none';
     
-    const imgParent = img.parentNode;
     media.appendChild(img);
     media.appendChild(video);
-    imgParent.insertBefore(media, imgParent.firstChild);
-    card.appendChild(media);
+    // 🧠 Insert media *before* the meta text block
+    card.insertBefore(media, meta);
 
     // Card click opens video player
     card.addEventListener('click', () => openPlayer(v));
