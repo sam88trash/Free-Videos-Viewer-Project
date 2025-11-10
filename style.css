@@ -127,6 +127,11 @@ select {
   margin: 0;
 }
 
+#ModalDesc {
+  color: var(--muted);
+  padding: 10px;
+}
+
 .player {
   width: 100vw;
   height: 100vh;
