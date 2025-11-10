@@ -3,15 +3,16 @@
 :root {
   --bg: #220126;
   --card: #380140;
+  --mid: #7C038C;
   --muted: #BC04BF;
-  --accent: #7C038C;
+  --accent: #EE05F2;
 }
 
 html, body {
   height: 100%;
   margin: 0;
-  background: #220126;
-  color: #ffffff;
+  background: var(--bg);
+  color: var(--accent);
   font-family: Inter, ui-sans-serif, system-ui, Arial, sans-serif;
 }
 
@@ -68,10 +69,10 @@ select {
 }
 
 .card {
-  background: #380140;
+  background: var(--card);
   border-radius: 12px;
   padding: 10px;
-  box-shadow: 0 6px 20px rgba(0,0,0, 0.6);
+  box-shadow: 0 6px 20px rgba(0,0,0, 0.7);
   cursor: pointer;
   transition: transform 0.14s;
 }
@@ -85,7 +86,7 @@ select {
   height: 130px;
   border-radius: 8px;
   object-fit: cover;
-  background: #220126;
+  background: var(--bg);
 }
 
 .meta {
@@ -109,7 +110,7 @@ select {
   border-radius: 10px;
   text-align: center;
   color: var(--muted);
-  background: rgba(255, 255, 255, 0.01);
+  background: var(--card);
 }
 
 /* Fullscreen modal */
@@ -120,7 +121,7 @@ select {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #220126;
+  background: var(--bg);
   z-index: 1000;
   padding: 0;
   margin: 0;
@@ -132,7 +133,7 @@ select {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: #220126;
+  background: var(--bg);
   padding: 0;
 }
 
@@ -150,12 +151,12 @@ select {
   justify-content: space-between;
   align-items: center;
   padding: 10px 16px;
-  background: rgba(0, 0, 0, 0.6);
+  background: transparent;
 }
 
 .close {
   background: rgba(255, 255, 255, 0.15);
-  color: #ffffff;
+  color: var(--accent);
   border: 1px solid rgba(255, 255, 255, 0.25);
   padding: 6px 12px;
   border-radius: 8px;
@@ -172,6 +173,7 @@ select {
 footer {
   margin-top: 20px;
   text-align: center;
+  background: var(--card);
   color: var(--muted);
   font-size: 13px;
 }
