@@ -60,6 +60,10 @@ function renderGrid() {
     const title = node.querySelector('.title');
     const desc = node.querySelector('.desc');
 
+    // Normalize field names to handle JSON variations
+    const file = v.file || v.video || v.link || '';
+    const thumb = v.thumb || v.thumbnail || v.image || '';
+    
     card.dataset.file = v.file;
     img.alt = v.title || 'video thumb';
     title.textContent = v.title || v.file;
