@@ -54,6 +54,18 @@
           <button id="downloadBtn" class="close">Download</button>
           <button id="closeBtn" class="close">Close</button>
         </div>
+        <div class="speed-control">
+          <label for="speedRange">Speed</label>
+          <input
+            id="speedRange"
+            type="range"
+            min="0.25"
+            max="2"
+            step="0.25"
+            value="1"
+          >
+          <span id="speedValue">1×</span>
+        </div>
       </div>
       <video id="videoPlayer" controls preload="metadata"></video>
       <div id="modalDesc"></div>
