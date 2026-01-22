@@ -208,6 +208,28 @@ footer {
   font-size: 13px;
 }
 
+
+.speed-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.speed-control input[type="range"] {
+  width: 110px;
+  cursor: pointer;
+}
+
+.speed-control span {
+  min-width: 32px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+
+
 @media (max-width: 600px) {
   .thumb {
     height: 110px;
