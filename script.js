@@ -14,6 +14,10 @@ const videoPlayer = document.getElementById('videoPlayer');
 const modalTitle = document.getElementById('modalTitle');
 const modalDesc = document.getElementById('modalDesc');
 
+const speedRange = document.getElementById('speedRange');
+const speedValue = document.getElementById('speedValue');
+
+
 let videos = [];
 
 
@@ -154,6 +158,7 @@ function openPlayer(v) {
     iframe.style.height = '100%';
     iframe.style.border = 'none';
     iframe.style.flex = '1';
+    document.querySelector('.speed-control').style.display = 'none';
 
     // Special case for Twitch (requires ?parent=yourdomain)
     if (src.includes('twitch.tv/player') && !src.includes('parent=')) {
@@ -178,7 +183,13 @@ function openPlayer(v) {
 
   videoPlayer.style.display = 'block';
   videoPlayer.poster = thumb;
+  // Reset playback speed
+  speedRange.value = 1;
+  speedValue.textContent = '1×';
+  videoPlayer.playbackRate = 1;
 
+  document.querySelector('.speed-control').style.display = 'flex';
+  
   if (Hls.isSupported() && src.endsWith('.m3u8')) {
     const hls = new Hls();
     hls.loadSource(src);
@@ -217,7 +228,11 @@ closeBtn.addEventListener('click', closePlayer);
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePlayer(); });
 searchInput.addEventListener('input', debounce(renderGrid, 180));
 sortSelect.addEventListener('change', renderGrid);
-
+speedRange.addEventListener('input', () => {
+  const rate = parseFloat(speedRange.value);
+  speedValue.textContent = rate.toFixed(2).replace(/\.00$/, '') + '×';
+  videoPlayer.playbackRate = rate;
+});
 
 // Debounce helper
 function debounce(fn, wait) {
