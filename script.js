@@ -17,9 +17,6 @@ const modalDesc = document.getElementById('modalDesc');
 const speedRange = document.getElementById('speedRange');
 const speedValue = document.getElementById('speedValue');
 
-const zoomRange = document.getElementById('zoomRange');
-const zoomValue = document.getElementById('zoomValue');
-
 
 let zoom = 1;
 let panX = 0;
@@ -214,9 +211,6 @@ function openPlayer(v) {
   speedRange.value = 1;
   speedValue.textContent = '1×';
   videoPlayer.playbackRate = 1;
-  // Reset zoom
-  zoomRange.value = 1;
-  zoomValue.textContent = '1×';
   // Reset zoom & pan
   zoom = 1;
   panX = 0;
