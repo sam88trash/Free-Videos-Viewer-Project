@@ -217,7 +217,7 @@ function openPlayer(v) {
   zoom = 1;
   panX = 0;
   panY = 0;
-  updateVideoTransform();
+  updateTransform();
 
   document.querySelector('.speed-control').style.display = 'flex';
   document.querySelector('.zoom-control').style.display = 'flex';
