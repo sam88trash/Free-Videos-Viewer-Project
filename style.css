@@ -173,13 +173,6 @@ select {
   object-fit: contain;
   background: black;
   border: none;
-  cursor: grab;
-  transform-origin: center center;
-  transition: transform 0.05s linear;
-}
-
-.player video:active {
-  cursor: grabbing;
 }
 
 .player .row {
