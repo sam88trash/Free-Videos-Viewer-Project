@@ -175,7 +175,7 @@ select {
   border: none;
   cursor: default;
   transform-origin: center center;
-  transition: transform 0.05s linear;
+  transition: transform 0.1s ease-out;
 }
 
 .player video:fullscreen {
@@ -233,12 +233,6 @@ footer {
   min-width: 32px;
   text-align: right;
   font-variant-numeric: tabular-nums;
-}
-
-/* Zoomable video */
-.player video {
-  transform-origin: center center;
-  transition: transform 0.1s ease-out;
 }
 
 
