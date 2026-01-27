@@ -48,7 +48,7 @@ async function loadManifest() {
 }
 
 //panning
-function updateVideoTransform() {
+function updateTransform() {
   videoPlayer.style.transform =
     `translate(${panX}px, ${panY}px) scale(${zoom})`;
 }
@@ -266,43 +266,50 @@ speedRange.addEventListener('input', () => {
   speedValue.textContent = rate.toFixed(2).replace(/\.00$/, '') + '×';
   videoPlayer.playbackRate = rate;
 });
-zoomRange.addEventListener('input', () => {
-  const z = parseFloat(zoomRange.value);
-  zoomValue.textContent = z.toFixed(1) + '×';
-  videoPlayer.style.transform = `scale(${z})`;
-});
+
 videoPlayer.addEventListener('wheel', e => {
-  // Only for native video
-  if (videoPlayer.style.display === 'none') return;
+  if (document.fullscreenElement !== videoPlayer) return;
 
   e.preventDefault();
 
   const delta = e.deltaY < 0 ? 0.1 : -0.1;
   zoom = Math.min(3, Math.max(1, zoom + delta));
 
-  updateVideoTransform();
+  updateTransform();
 }, { passive: false });
-videoPlayer.addEventListener('mousedown', e => {
-  if (e.button !== 1) return; // middle mouse only
-  e.preventDefault();
 
+videoPlayer.addEventListener('mousedown', e => {
+  if (document.fullscreenElement !== videoPlayer) return;
+  if (e.button !== 1) return; // middle button only
+
+  e.preventDefault();
   isPanning = true;
   startX = e.clientX - panX;
   startY = e.clientY - panY;
 });
+
 window.addEventListener('mousemove', e => {
   if (!isPanning) return;
+  if (document.fullscreenElement !== videoPlayer) return;
 
   panX = e.clientX - startX;
   panY = e.clientY - startY;
-
-  updateVideoTransform();
+  updateTransform();
 });
+
 window.addEventListener('mouseup', e => {
-  if (e.button === 1) {
-    isPanning = false;
+  if (e.button === 1) isPanning = false;
+});
+
+document.addEventListener('fullscreenchange', () => {
+  if (document.fullscreenElement !== videoPlayer) {
+    zoom = 1;
+    panX = 0;
+    panY = 0;
+    videoPlayer.style.transform = 'none';
   }
 });
+
 
 
 
