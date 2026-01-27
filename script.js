@@ -306,7 +306,7 @@ document.addEventListener('fullscreenchange', () => {
 
   if (isFs) {
     videoPlayer.controls = false;
-    videoPlayer.style.cursor = 'grab';
+    videoPlayer.style.cursor = 'None';
   } else {
     videoPlayer.controls = true;
     videoPlayer.style.cursor = 'default'; // ✅ important
