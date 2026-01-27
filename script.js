@@ -141,7 +141,11 @@ function openPlayer(v) {
   downloadBtn.onclick = () => window.open(v.file, '_blank');
   document.body.style.overflow = 'hidden';
 
-  const src = v.file || v.video || v.link || '';
+  const src = v.file ?? v.video ?? v.link;
+  if (!src) {
+    console.warn('No playable source for video:', v);
+    return;
+  }
   const thumb = v.thumb || v.thumbnail || '';
 
   // Clear any previous iframe
@@ -151,6 +155,7 @@ function openPlayer(v) {
   // Reset video player
   videoPlayer.pause();
   videoPlayer.removeAttribute('src');
+  videoPlayer.load();
   videoPlayer.style.display = 'none';
 
   // 🧠 Detect embed-like links (not just YouTube)
@@ -229,9 +234,11 @@ function openPlayer(v) {
     hls.on(Hls.Events.MANIFEST_PARSED, () => videoPlayer.play().catch(() => {}));
   } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
     videoPlayer.src = src;
+    videoPlayer.load();
     videoPlayer.addEventListener('loadedmetadata', () => videoPlayer.play().catch(() => {}));
   } else {
     videoPlayer.src = src;
+    videoPlayer.load();
     videoPlayer.play().catch(() => {});
   }
 }
@@ -301,13 +308,22 @@ window.addEventListener('mouseup', e => {
 });
 
 document.addEventListener('fullscreenchange', () => {
-  if (document.fullscreenElement !== videoPlayer) {
+  const isFs = document.fullscreenElement === videoPlayer;
+
+  if (isFs) {
+    videoPlayer.controls = false;
+    videoPlayer.style.cursor = 'grab';
+  } else {
+    videoPlayer.controls = true;
+    videoPlayer.style.cursor = 'default'; // ✅ important
+
     zoom = 1;
     panX = 0;
     panY = 0;
     videoPlayer.style.transform = 'none';
   }
 });
+
 
 
 
