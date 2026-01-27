@@ -212,7 +212,6 @@ function openPlayer(v) {
   // Reset zoom
   zoomRange.value = 1;
   zoomValue.textContent = '1×';
-  videoPlayer.style.transform = 'scale(1)';
   // Reset zoom & pan
   zoom = 1;
   panX = 0;
