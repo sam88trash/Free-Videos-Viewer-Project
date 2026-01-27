@@ -218,7 +218,7 @@ function openPlayer(v) {
   updateTransform();
 
   document.querySelector('.speed-control').style.display = 'flex';
-  document.querySelector('.zoom-control').style.display = 'flex';
+  //document.querySelector('.zoom-control').style.display = 'flex';
 
   //playback
   if (Hls.isSupported() && src.endsWith('.m3u8')) {
