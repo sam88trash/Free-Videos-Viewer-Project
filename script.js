@@ -268,19 +268,18 @@ speedRange.addEventListener('input', () => {
 });
 
 videoPlayer.addEventListener('wheel', e => {
-  if (document.fullscreenElement !== videoPlayer) return;
+  if (!document.fullscreenElement?.contains(videoPlayer)) return;
 
   e.preventDefault();
 
   const delta = e.deltaY < 0 ? 0.1 : -0.1;
   zoom = Math.min(3, Math.max(1, zoom + delta));
-
   updateTransform();
 }, { passive: false });
 
 videoPlayer.addEventListener('mousedown', e => {
-  if (document.fullscreenElement !== videoPlayer) return;
-  if (e.button !== 1) return; // middle button only
+  if (!document.fullscreenElement?.contains(videoPlayer)) return;
+  if (e.button !== 1) return;
 
   e.preventDefault();
   isPanning = true;
@@ -290,7 +289,7 @@ videoPlayer.addEventListener('mousedown', e => {
 
 window.addEventListener('mousemove', e => {
   if (!isPanning) return;
-  if (document.fullscreenElement !== videoPlayer) return;
+  if (!document.fullscreenElement?.contains(videoPlayer)) return;
 
   panX = e.clientX - startX;
   panY = e.clientY - startY;
@@ -302,14 +301,14 @@ window.addEventListener('mouseup', e => {
 });
 
 document.addEventListener('fullscreenchange', () => {
-  const isFs = document.fullscreenElement === videoPlayer;
+  const isFs = document.fullscreenElement?.contains(videoPlayer);
 
   if (isFs) {
     videoPlayer.controls = false;
-    videoPlayer.style.cursor = 'None';
+    videoPlayer.style.cursor = 'grab';
   } else {
     videoPlayer.controls = true;
-    videoPlayer.style.cursor = 'default'; // ✅ important
+    videoPlayer.style.cursor = 'default';
 
     zoom = 1;
     panX = 0;
