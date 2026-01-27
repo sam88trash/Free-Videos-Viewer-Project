@@ -17,6 +17,9 @@ const modalDesc = document.getElementById('modalDesc');
 const speedRange = document.getElementById('speedRange');
 const speedValue = document.getElementById('speedValue');
 
+const zoomRange = document.getElementById('zoomRange');
+const zoomValue = document.getElementById('zoomValue');
+
 
 let videos = [];
 
@@ -159,6 +162,7 @@ function openPlayer(v) {
     iframe.style.border = 'none';
     iframe.style.flex = '1';
     document.querySelector('.speed-control').style.display = 'none';
+    document.querySelector('.zoom-control').style.display = 'none';
 
     // Special case for Twitch (requires ?parent=yourdomain)
     if (src.includes('twitch.tv/player') && !src.includes('parent=')) {
@@ -187,8 +191,13 @@ function openPlayer(v) {
   speedRange.value = 1;
   speedValue.textContent = '1×';
   videoPlayer.playbackRate = 1;
+  // Reset zoom
+  zoomRange.value = 1;
+  zoomValue.textContent = '1×';
+  videoPlayer.style.transform = 'scale(1)';
 
   document.querySelector('.speed-control').style.display = 'flex';
+  document.querySelector('.zoom-control').style.display = 'flex';
   
   if (Hls.isSupported() && src.endsWith('.m3u8')) {
     const hls = new Hls();
@@ -233,6 +242,12 @@ speedRange.addEventListener('input', () => {
   speedValue.textContent = rate.toFixed(2).replace(/\.00$/, '') + '×';
   videoPlayer.playbackRate = rate;
 });
+zoomRange.addEventListener('input', () => {
+  const z = parseFloat(zoomRange.value);
+  zoomValue.textContent = z.toFixed(1) + '×';
+  videoPlayer.style.transform = `scale(${z})`;
+});
+
 
 // Debounce helper
 function debounce(fn, wait) {
