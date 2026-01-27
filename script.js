@@ -21,6 +21,15 @@ const zoomRange = document.getElementById('zoomRange');
 const zoomValue = document.getElementById('zoomValue');
 
 
+let zoom = 1;
+let panX = 0;
+let panY = 0;
+
+let isPanning = false;
+let startX = 0;
+let startY = 0;
+
+
 let videos = [];
 
 
@@ -38,6 +47,11 @@ async function loadManifest() {
   }
 }
 
+//panning
+function updateVideoTransform() {
+  videoPlayer.style.transform =
+    `translate(${panX}px, ${panY}px) scale(${zoom})`;
+}
 
 // Render video cards
 function renderGrid() {
@@ -163,6 +177,10 @@ function openPlayer(v) {
     iframe.style.flex = '1';
     document.querySelector('.speed-control').style.display = 'none';
     document.querySelector('.zoom-control').style.display = 'none';
+    zoom = 1;
+    panX = 0;
+    panY = 0;
+    videoPlayer.style.transform = 'none';
 
     // Special case for Twitch (requires ?parent=yourdomain)
     if (src.includes('twitch.tv/player') && !src.includes('parent=')) {
@@ -195,10 +213,16 @@ function openPlayer(v) {
   zoomRange.value = 1;
   zoomValue.textContent = '1×';
   videoPlayer.style.transform = 'scale(1)';
+  // Reset zoom & pan
+  zoom = 1;
+  panX = 0;
+  panY = 0;
+  updateVideoTransform();
 
   document.querySelector('.speed-control').style.display = 'flex';
   document.querySelector('.zoom-control').style.display = 'flex';
-  
+
+  //playback
   if (Hls.isSupported() && src.endsWith('.m3u8')) {
     const hls = new Hls();
     hls.loadSource(src);
@@ -247,6 +271,39 @@ zoomRange.addEventListener('input', () => {
   zoomValue.textContent = z.toFixed(1) + '×';
   videoPlayer.style.transform = `scale(${z})`;
 });
+videoPlayer.addEventListener('wheel', e => {
+  // Only for native video
+  if (videoPlayer.style.display === 'none') return;
+
+  e.preventDefault();
+
+  const delta = e.deltaY < 0 ? 0.1 : -0.1;
+  zoom = Math.min(3, Math.max(1, zoom + delta));
+
+  updateVideoTransform();
+}, { passive: false });
+videoPlayer.addEventListener('mousedown', e => {
+  if (e.button !== 1) return; // middle mouse only
+  e.preventDefault();
+
+  isPanning = true;
+  startX = e.clientX - panX;
+  startY = e.clientY - panY;
+});
+window.addEventListener('mousemove', e => {
+  if (!isPanning) return;
+
+  panX = e.clientX - startX;
+  panY = e.clientY - startY;
+
+  updateVideoTransform();
+});
+window.addEventListener('mouseup', e => {
+  if (e.button === 1) {
+    isPanning = false;
+  }
+});
+
 
 
 // Debounce helper
